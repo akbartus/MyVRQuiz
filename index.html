@@ -1,0 +1,398 @@
+<html>
+
+<head>
+  <title>My Quiz</title>
+  <meta charset="UTF-8">
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/a-super-sky@1.1.1/super-sky.js"></script>
+  <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+  </script>
+  <style>
+    .output {
+      color: #fff;
+      padding: 0px;
+      width: 500px;
+      min-height: 100px;
+
+    }
+
+    #fiftyFifty,
+    #callToFriend,
+    #nextQuestion {
+      border: 1px solid #fff;
+      width: 50px;
+      height: 25px;
+      margin: 10px 0;
+
+    }
+
+    #fiftyFifty:hover,
+    #nextQuestion:hover,
+    #callToFriend:hover {
+      background-color: #ffcb0c;
+      color: #000;
+    }
+
+    #restart {
+      display: none;
+      width: 80px;
+      margin: 20px auto;
+    }
+
+    #host {
+      width: 70px;
+      height: 70px;
+      margin-top: 10px;
+    }
+
+    #hostLabel {
+      color: #ffffff;
+      text-align: center;
+    }
+
+    #callWrapper {
+      margin: 0 auto;
+      width: 450px;
+      text-align: center;
+    }
+
+
+
+    #callText {
+      padding: 3px;
+      height: 20px;
+      color: #000;
+      margin: 25px 0;
+    }
+
+    #currentScore {
+      width: 100px;
+      height: 20px;
+      padding: 4px;
+      font-size: 16px;
+      text-align: center;
+      background: #fff;
+      color: #000;
+
+    }
+
+    #currentLevel {
+      width: 100px;
+      height: 20px;
+      padding: 4px;
+      font-size: 16px;
+      text-align: center;
+      background: #fff;
+      color: #000;
+      margin-right: 10px;
+    }
+
+    .myQ {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px;
+      text-align: center;
+
+    }
+
+    .btnAns {
+      border: 1px solid #fff;
+      padding: 10px;
+      text-align: center;
+      display: inline-block;
+      margin: 5px;
+      font-size: 12px;
+      width: 200px;
+    }
+
+    .btnAns:hover {
+      background-color: rgb(30, 126, 22);
+      color: #fff;
+    }
+
+    .scoreOutput {
+      font-size: 16px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .gameOver {
+      font-size: 2em;
+      padding: 10px;
+      text-align: center;
+
+    }
+
+    #intro {
+      width: 500px;
+      height: 250px;
+      background-color: rgba(0, 0, 0, 1);
+      z-index: 3;
+    }
+
+    .environment {
+      z-index: 3;
+      display: block;
+      position: relative;
+      top: 5%;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font: 20px 'Voces', sans-serif;
+      color: #FFF;
+    }
+
+    #wrapper {
+      display: none;
+      width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #overlay {
+      position: fixed;
+      display: none;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 3;
+      overflow-y: scroll;
+      cursor: pointer;
+    }
+
+    #instructions {
+      font-size: 18px;
+      color: #ffcb0c;
+      margin: 0 auto;
+      padding-top: 2%;
+      line-height: 24px;
+      width: 300px;
+    }
+    .instructionsImg {
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+    #mainPage {
+      background: #000;
+      border: 2px solid #ffcb0c;
+      padding: 2%;
+      position: relative;
+      z-index: 2;
+      top: 15%;
+      margin: 0 auto;
+      width: 300px;
+    }
+
+   
+    #label {
+      display: block;
+      font-size: 18px;
+      color: #fff;
+      text-align: center;
+    }
+
+    #quizLink {
+      margin: 0 auto;
+      width: 300px;
+      font-size: 18px;
+      height: 30px;
+    }
+
+    #title {
+      font-size: 60px;
+      font-weight: bold;
+      padding-bottom: 60px;
+      color: #ffcb0c;
+      text-align: center;
+    }
+
+    #logo {
+      width: 200px;
+    }
+
+    #wrap {
+      text-align: center;
+      margin-top: 40px;
+
+    }
+
+    #start,
+    #help {
+      font-size: 24px;
+
+      margin-right: 10px;
+      color: #fff;
+      border: 1px solid #fff;
+      width: 54px;
+      display: inline-block;
+      padding: 2%;
+    }
+
+    #start:hover,
+    #help:hover {
+      cursor: pointer;
+      color: #ffcb0c;
+      border: 1px solid #ffcb0c;
+    }
+
+    #toggleTitle {
+      font-size: 16px;
+      margin-top: 40%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <audio id="audio1" src="assets/sounds/intro.mp3"></audio>
+  <audio id="audio2a" src="assets/sounds/game.mp3" loop></audio>
+  <audio id="audio2b" src="assets/sounds/game2.mp3" loop></audio>
+  <audio id="audio2c" src="assets/sounds/game3.mp3" loop></audio>
+  <audio id="audio2d" src="assets/sounds/game4.mp3" loop></audio>
+  <audio id="audio3" src="assets/sounds/correct.mp3"></audio>
+  <audio id="audio4" src="assets/sounds/wrong.mp3"></audio>
+  <audio id="audio20" src="assets/sounds/dial.mp3"></audio>
+  <audio id="audio21" src="assets/sounds/50and50.mp3"></audio>
+  <audio id="audio22" src="assets/sounds/next.mp3"></audio>
+  <div id="overlay" onclick="helpOff()">
+    <div id="instructions">
+      <p>1. Create a spreadsheet in Google Sheets and name it.</p>
+      <img class="instructionsImg" src="assets/images/0.jpg">
+      <p>2. Asign five column names: "Question", "Correct", "Selection1", "Selection2", "Selection3"</p>
+      <img class="instructionsImg" src="assets/images/1.jpg">
+      <p>3. Enter your questions and four answers.</p>
+      <img class="instructionsImg" src="assets/images/2.jpg">
+      <p>4. Make your sheet sharable.</p>
+      <img class="instructionsImg" src="assets/images/3.jpg">
+      <p>5. Copy your sheet link and paste it.</p>
+      <img class="instructionsImg" src="assets/images/4.jpg">
+
+      </div>
+  </div>
+  <div id="mainPage">
+    <div id="title"><img id="logo" src="assets/images/logo.png"></div>
+    <div><span id="label">Enter Your Quiz Link: </span><input type="text" id="quizLink" value=""></div>
+    <div id="wrap">
+      <div id="help" onclick="helpOn();">Help</div>
+      <div id="start" onclick="begin();">Start</div>
+    </div>
+  </div>
+  <a-scene  vr-mode-ui="enterVRButton: #start">
+
+    <a-entity id="animatedObject" camera look-controls position="0.5 3.7 -3.5" rotation="0 0 0"
+      cursor="rayOrigin: mouse">
+      <!--Cursor-->
+      <a-entity id="myCursor" visible="false" cursor="fuse: true; fuseTimeout: 500" position="0 0 -0.05"
+        geometry="primitive: ring; radiusInner: 0.0005; radiusOuter: 0.0010" material="color: red; ">
+      </a-entity>
+    </a-entity>
+    <!--Intro + Main Logo -->
+    <a-entity position="0.4 3.673 -6.45" rotation="0 0 0" scale="4 4 4" htmlembed>
+      <div id="intro">
+        <div class="environment">
+
+
+        </div>
+      </div>
+    </a-entity>
+
+    <a-entity position="0.165 1.350 0" rotation="-50 -90 0" scale="0.18 0.18 0.18" htmlembed>
+
+      <div id="wrapper">
+        <span id="currentScore"></span>
+        <span id="currentLevel"></span>
+        <button id="fiftyFifty"><img src="assets/images/50&50.png" style="height: 13px;"></button>
+        <button id="callToFriend"><img src="assets/images/phone.png" style="height: 15px;"></button>
+        <button id="nextQuestion"><img src="assets/images/next.png" style="height: 15px;"></button>
+        <div id="hostLabel"><img id="host" src="assets/images/Aya.png"><br />Aya (host)</div>
+        <div class="output"></div>
+        <button id="restart">Restart</button>
+      </div>
+      <div id="callWrapper">
+        <div id="callText"></div>
+      </div>
+    </a-entity>
+
+    <a-entity gltf-model="assets/3dAssets/environment/sample_model.glb" rotation="0 -90 0" position="0.5 0.1 0"
+      scale="1.1 1.1 1.1"></a-entity>
+    <!-- <a-obj-model src="assets/3dAssets/environment/sample_model.obj" mtl="assets/3dAssets/environment/sample_model.mtl" rotation="0 -90 0" position="0.5 0.1 0" scale="1.1 1.1 1.1"> -->
+
+    </a-obj-model>
+    <a-obj-model src="assets/3dAssets/humans/091_W_Aya_10K.obj" position="1.503 0.35 0.08" rotation="0 -90 0"
+      mtl="assets/3dAssets/humans/091_W_Aya_10K.mtl" scale="0.001 0.001 0.001">
+    </a-obj-model>
+
+    <a-image src="assets/images/logo.png" position="0.795 3.8 -6.5" scale="3 3 3"></a-image>
+    <!--Laser Controllers-->
+    <a-entity laser-controls="hand: left"></a-entity>
+    <a-entity laser-controls="hand: right"></a-entity>
+    <a-entity light="type: point; intensity: 0.85; distance: 50; decay: 2" position="0.50 2 0.03"></a-entity>
+    <!-- <a-entity light="type: ambient; color: #CCC"></a-entity> -->
+    <a-super-sky cycleduration="10" groundcolor="#7BC8A4"></a-super-sky>
+  </a-scene>
+
+  <script src="js/quizApp.js"></script>
+  <script type="text/javascript">
+    var quizLink = "";
+    // Help
+    function helpOn() {
+      document.getElementById("overlay").style.display = "block";
+    }
+    function helpOff() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    // Start the game, remove intro overlay, start animation
+    function begin() {
+      var link = document.getElementById("quizLink").value.replace("/edit#gid=0", "/gviz/tq?");
+      quizLink = link;
+      document.getElementById("mainPage").setAttribute("style", "display:none");
+
+      // 1RAZQqPqMRIRMpWB5taFNWt1wqmhJOJTb5qwqf5wevg8
+
+      app.init;
+
+      document.getElementById("audio1").play();
+      setTimeout(function () {
+        const audios = ["audio2a", "audio2b", "audio2c", "audio2d"];
+        const random = Math.floor(Math.random() * audios.length);
+        //console.log(random, audious[random]);
+        document.getElementById(audios[random]).play();
+      }, 4000);
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("animatedObject").setAttribute("animation",
+        "property: position; from: 0 3.5 -4; to: 0 1.5 0; dur: 5000");
+      setTimeout(function () {
+        document.getElementById("wrapper").style.display = "block";
+      }, 6000);
+
+    }
+
+
+    //  if (AFRAME.utils.device.isMobileVR() === false) {
+    //     document.getElementById("myCursor").setAttribute("visible", false);
+
+    //     //or just cursor.parentNode.removeChild(cursor)
+    //     document.getElementById("myCursor").setAttribute("cursor","rayOrigin","mouse")
+    //     //"property: position; from: 0 3.5 -4; to: -0.45 -0.12 0; dur: 5000");
+    //  }
+
+    if (AFRAME.utils.device.isMobile() === true) {
+      //document.querySelector("a-scene").setAttribute("vr-mode-ui", "enabled", false) 
+      document.getElementById("myCursor").setAttribute("visible", true);
+    } else {
+      document.getElementById("myCursor").setAttribute("visible", false);
+    }
+
+  </script>
+
+</body>
+
+</html>
